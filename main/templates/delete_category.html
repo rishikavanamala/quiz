@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Category</title>
+</head>
+<body>
+    <h1>Delete Category</h1>
+    <p>Are you sure you want to delete the category: "{{ category.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+    </form>
+    <p><a href="{% url 'admin_dashboard' %}">Cancel</a></p>
+</body>
+</html>

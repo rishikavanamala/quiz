@@ -1,0 +1,16 @@
+<!-- show_all_questions.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Questions</title>
+</head>
+<body>
+    <h1>All Questions</h1>
+    <ul>
+        {% for question in questions %}
+        <li>ID: {{ question.id }} -category-{{ question.category}} Question: {{ question.question}}</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'admin_dashboard' %}">Back to Admin Dashboard</a></p>
+</body>
+</html>

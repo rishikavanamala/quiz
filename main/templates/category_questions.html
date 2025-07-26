@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}  
+{% block title %}{{ category.title }} questions{% endblock %}
+{% block content %}
+<h2 class="my-4">{{ category.category }} Questions</h2>
+
+<div id="questionContainer" class="card my-4 border-primary">
+    <h4 id="questionTitle" class="card-header">{{ data.question }}</h4>
+    <div id="questionBody" class="card-body">
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+        {% endif %}
+        <form id="quizForm" method="post" action="{% url 'submit_answer' category.id data.id %}">
+            {% csrf_token %}
+            <table class="table table-bordered">
+                <tr>
+                    <td><input id="option_1" type="radio" name="option" value="{{ data.option1 }}" /></td>
+                    <th><label for="option_1">{{ data.option1 }}</label></th>
+                </tr>
+                <tr>
+                    <td><input id="option_2" type="radio" name="option" value="{{ data.option2 }}" /></td>
+                    <th><label for="option_2">{{ data.option2 }}</label></th>
+                </tr>
+                <tr>
+                    <td><input id="option_3" type="radio" name="option" value="{{ data.option3 }}" /></td>
+                    <th><label for="option_3">{{ data.option3 }}</label></th>
+                </tr>
+                <tr>
+                    <td><input id="option_4" type="radio" name="option" value="{{ data.option4 }}" /></td>
+                    <th><label for="option_4">{{ data.option4 }}</label></th>
+                </tr>
+            </table>
+           
+            <div class="card-footer">
+                <input type="submit" id="skip" name="skip" value="Skip" class="btn btn-warning skipBtn" />
+                <input type="submit" id="submit" name="submit" value="Submit" class="btn btn-primary submitBtn" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="timer">Time left: <span id="time">10</span> seconds</div>
+
+<script>
+
+
+
+        // Total time for the quiz (in seconds)
+        let totalTime = 10;
+
+        // Display initial time
+        document.getElementById('time').textContent = totalTime;
+
+        // Function to update the timer
+        function updateTimer() {
+            totalTime--;
+
+            // Update the displayed time
+            document.getElementById('time').textContent = totalTime;
+
+            // Check if time is up
+            if (totalTime <= 0) {
+                clearInterval(timerInterval);
+                var checked_option = document.querySelector('input[name = "option"]:checked');
+                if(checked_option != null){  //Test if something was checked
+                   var submitButton = document.getElementById("submit");
+                    submitButton.click();
+                } else {
+                    var skipButton = document.getElementById("skip");
+                    skipButton.click();
+                }
+                // You can add any additional actions here, e.g., move to the next question or end the quiz
+            }
+        }
+
+        // Set an interval to update the timer every second
+        let timerInterval = setInterval(updateTimer, 1000);
+
+        // Optional: Function to reset the timer for a new question
+        function resetTimer(newTime) {
+            clearInterval(timerInterval);
+            totalTime = newTime;
+            document.getElementById('time').textContent = totalTime;
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Optional: Example of how to reset the timer for a new question
+        // resetTimer(15); // Resets the timer to 15 seconds for the next question
+    </script>
+
+
+{% endblock %}

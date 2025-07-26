@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Quiz Results{% endblock %}
+{% block content %}
+<h2 class="my-4">Quiz Results</h2>
+
+{% for category_result in category_results %}
+{% if category_result.attempted_questions > 0 %}
+<h3>{{ category_result.category.title }}</h3>
+
+<!-- Detailed Results Table -->
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Correct Answer</th>
+                <th>Your Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in category_result.user_answers %}
+            {% if answer.right_answer == 'Not Submitted' %}
+            <tr class="table-warning">
+            {% elif answer.right_answer == answer.question.right_answer %}
+            <tr class="table-success">
+            {% else %}
+            <tr class="table-danger">
+            {% endif %}
+                <td>{{ answer.question.question }}</td> <!-- Deta -->
+                <td>{{ answer.question.right_answer }}</td><!-- which was stored in database -->
+                <td>{{ answer.right_answer }}</td>  <!-- which was given by user -->
+                <!-- <td>{{ answer.question.right_answer }}</td> -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- Summary Table for the Category -->
+<div class="table-responsive my-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Total Questions</th>
+                <th>Attempted Questions</th>
+                <th>Skipped Questions</th>
+                <th>Correct Answers</th>
+                <th>Percentage Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ category_result.total_questions }}</td>
+                <td>{{ category_result.attempted_questions }}</td>
+                <td>{{ category_result.skipped_questions }}</td>
+                <td>{{ category_result.correct_answers }}</td>
+                <td>{{ category_result.percentage_score }}%</td>
+            </tr>
+        </tbody>
+    </table>
+    <a class="nav-link" href="{% url 'home' %}">Logout</a>
+
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

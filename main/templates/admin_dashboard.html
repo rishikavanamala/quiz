@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .question-container {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .category-label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4">Admin Dashboard</h1>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>Questions</h2>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'add_question' %}" class="btn btn-success mb-2">Add Question</a></li>
+                    <li><a href="{% url 'show_all_questions' %}" class="btn btn-primary mb-2">Show All Questions</a></li>
+                    {% for question in questions %}
+                    <li class="question-container">
+                        <form method="post" action="{% url 'delete_question' question.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm delete-btn">Delete  {{ question.question}}</button>
+                        </form>
+                        <p>{{ question.question_text }}</p>
+                        {% if question.category %}
+                        <p class="category-label">Category: {{ question.category.title}}</p>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Categories</h2>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'add_category' %}" class="btn btn-success mb-2">Add Category</a></li>
+                    {% for category in categories %}
+                    <li class="question-container">
+                        <form method="post" action="{% url 'delete_category' category.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm delete-btn">Delete {{category.title}} category</button>
+                        </form>
+                        <p>{{ category.name }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <p><a href="{% url 'home' %}" class="btn btn-link">Back to Home</a></p>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
